@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <title>Stopwatch</title>
+    <style>
+      p {
+        font-family: sans-serif;
+        font-size: 80px;
+        text-align: center;
+        font-weight: bolder;
+        color: rgb(15, 102, 117);
+        width: 80px;
+        margin-bottom: 50px;
+      }
+        div {
+            display: flex;
+            justify-content: center;
+        }
+
+      button {
+        height: 90px;
+          width: 90px;
+          border-radius: 100%;
+          padding: 0px 10px;
+          font-size: 20px;
+          color: white;
+          border-style: none;
+          align-items: center;
+          margin: 10px;
+
+      }
+
+      .start {
+          background-color: #4CAF50;
+         
+      }
+
+      .stop {
+          background-color: red;
+      }
+
+      .reset {
+          background-color:rgb(73, 141, 180);
+      }
+
+    </style>
+  </head>
+  <body>
+    <div>
+      <p class="godziny"></p>
+      <p>:</p>
+      <p class="minuty"></p>
+      <p>:</p>
+      <p class="sekundy"></p>
+    </div>
+    <div>
+        <button class="start">Start</button>
+        <button class="stop">Stop</button>
+        <button class="reset">Reset</button>
+    </div>
+    <script>
+       // let color = document.querySelector("p"); 
+        let startClock = document.querySelector(".start");
+        let stopClock = document.querySelector(".stop");
+        let resetClock = document.querySelector(".reset");
+        let progress;
+        let godziny;
+        let minuty;
+        let sekundy;
+        let opoznienie;
+        let startDate;
+        
+        function start() {
+            progress = Math.floor((Date.now() - startDate)/1000);
+            console.log(progress);
+            godziny = Math.floor(progress / 3600);
+            minuty = Math.floor(progress / 60) - godziny * 60;
+            sekundy = progress - minuty * 60 - godziny * 3600;
+            document.querySelector('.godziny').textContent = numToString(godziny);
+            document.querySelector('.minuty').textContent = numToString(minuty);
+            document.querySelector('.sekundy').textContent = numToString(sekundy);
+        };
+
+        function numToString(number) {
+          let str;
+          if (number<10) {
+            str = "0" + number.toString();
+          } else {
+            str = number.toString();
+          };
+          return str;
+        };
+
+      function reset() {
+        progress = 0;
+        godziny = 0;
+        minuty = 0;
+        sekundy = 0;
+        startDate = Date.now();
+        clearInterval(opoznienie);
+        startClock.addEventListener("click", delay);
+        start();
+      };
+
+
+     /* function randomColor(min, max) {
+          const num = Math.round(Math.random() * (max-min)) + min;
+          return num;
+      }*/
+
+
+        function delay() {
+          if (progress>0 || minuty>0 || godziny>0) {
+              startDate = Math.floor(Date.now() - 1000*progress);
+            } else {
+              startDate = Date.now();
+            };
+          opoznienie = setInterval(start, 100);
+          startClock.removeEventListener("click", delay);
+          };
+
+        function stop() {
+            clearInterval(opoznienie);
+            startClock.addEventListener("click", delay);
+        };
+
+      reset();
+
+      startClock.addEventListener("click", delay);
+      resetClock.addEventListener("click", reset);
+      stopClock.addEventListener("click", stop);
+    
+      
+    </script>
+  </body>
+</html>
